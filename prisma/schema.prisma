@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Rsvp {
+  id        String   @id @default(cuid())
+  name      String
+  attendance String
+  guests    String   @default("1")
+  createdAt DateTime @default(now())
+}
+
+model Wish {
+  id        String   @id @default(cuid())
+  name      String
+  message   String
+  createdAt DateTime @default(now())
+}

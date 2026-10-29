@@ -88,11 +88,11 @@ const WEDDING_DATA = {
     },
   ],
   gallery: [
-    "/images/wedding/couple-photo.png",
-    "/images/wedding/couple-silhouette.png",
-    "/images/wedding/floral-bouquet.png",
-    "/images/wedding/wedding-details.png",
-    "/images/wedding/floral-frame.png",
+    "/images/wedding/gallery-1.jpg",
+    "/images/wedding/gallery-2.jpg",
+    "/images/wedding/gallery-3.jpg",
+    "/images/wedding/gallery-4.jpg",
+    "/images/wedding/main-photo.jpg",
   ],
 };
 
@@ -426,9 +426,9 @@ function CoupleSection() {
             <div className="relative">
               <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-[#8B6F47]/20 mb-4">
                 <img
-                  src="/images/wedding/couple-photo.png"
+                  src="/images/wedding/groom.jpg"
                   alt="Raka"
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-full object-cover object-[50%_68%]"
                 />
               </div>
               <p className="heading-serif text-[34px] sm:text-[38px] leading-[1.05] font-light">
@@ -468,9 +468,9 @@ function CoupleSection() {
             <div className="relative">
               <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-[#8B6F47]/20 mb-4">
                 <img
-                  src="/images/wedding/couple-silhouette.png"
+                  src="/images/wedding/bride.jpg"
                   alt="Aulia"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-[50%_78%]"
                 />
               </div>
               <p className="heading-serif text-[34px] sm:text-[38px] leading-[1.05] font-light">
@@ -737,7 +737,9 @@ function LoveStorySection() {
 
 // ==================== GALLERY SECTION ====================
 function GallerySection() {
-  const [selected, setSelected] = useState<number | null>(null);
+  // Konsep baru: 1 preview besar + 5 thumbnail. Klik thumbnail → tampil di preview besar.
+  const [active, setActive] = useState(0);
+  const [lightbox, setLightbox] = useState<number | null>(null);
 
   return (
     <AnimatedSection className="relative w-full py-20 px-6 overflow-hidden">
@@ -753,32 +755,61 @@ function GallerySection() {
           <SectionDivider />
         </motion.div>
 
+        {/* Preview besar */}
+        <motion.div
+          variants={scaleIn}
+          className="group relative mt-10 aspect-[4/5] cursor-pointer overflow-hidden rounded-[26px]"
+          onClick={() => setLightbox(active)}
+        >
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={active}
+              src={WEDDING_DATA.gallery[active]}
+              alt={`Preview foto ${active + 1}`}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </AnimatePresence>
+          <div className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/15" />
+          <div className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/45 px-3.5 py-1.5 text-[10px] tracking-[0.18em] uppercase text-white/90 backdrop-blur-sm">
+            Ketuk untuk perbesar
+          </div>
+        </motion.div>
+
+        {/* Thumbnail kecil — klik untuk mengganti preview besar */}
         <motion.div
           variants={staggerContainer}
-          className="mt-10 grid grid-cols-2 gap-3"
+          className="mt-3.5 grid grid-cols-5 gap-2.5"
         >
           {WEDDING_DATA.gallery.map((img, index) => (
-            <motion.div
+            <motion.button
               key={index}
               variants={scaleIn}
-              className={`relative overflow-hidden rounded-2xl cursor-pointer group ${
-                index === 0 ? "col-span-2 aspect-[4/3]" : "aspect-square"
+              type="button"
+              aria-label={`Tampilkan foto ${index + 1}`}
+              aria-pressed={active === index}
+              onClick={() => setActive(index)}
+              className={`relative aspect-square overflow-hidden rounded-xl border transition-all duration-300 ${
+                active === index
+                  ? "scale-[1.04] border-[#8B6F47] opacity-100 ring-2 ring-[#8B6F47]/50 ring-offset-1"
+                  : "border-black/5 opacity-65 hover:opacity-100"
               }`}
-              onClick={() => setSelected(index)}
             >
               <img
                 src={img}
-                alt={`Gallery ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                alt={`Thumbnail foto ${index + 1}`}
+                className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-            </motion.div>
+            </motion.button>
           ))}
         </motion.div>
 
         {/* Lightbox */}
         <AnimatePresence>
-          {selected !== null && (
+          {lightbox !== null && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -791,13 +822,13 @@ function GallerySection() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                src={WEDDING_DATA.gallery[selected]}
+                src={WEDDING_DATA.gallery[lightbox ?? 0]}
                 alt="Full size"
                 className="max-w-full max-h-[85vh] object-contain rounded-xl"
               />
               <button
                 className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/30 transition"
-                onClick={() => setSelected(null)}
+                onClick={() => setLightbox(null)}
               >
                 ✕
               </button>
@@ -1304,7 +1335,7 @@ export default function WeddingPage() {
               >
                 <div className="img-deco-border rounded-2xl overflow-hidden">
                   <img
-                    src="/images/wedding/couple-silhouette.png"
+                    src="/images/wedding/main-photo.jpg"
                     alt="Raka & Aulia"
                     className="w-full h-auto object-cover rounded-xl"
                   />

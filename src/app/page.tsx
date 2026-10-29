@@ -17,7 +17,6 @@ import {
   Copy,
   Check,
   Loader2,
-  Download,
   ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -1360,14 +1359,6 @@ export default function WeddingPage() {
       <BackToTemplateButton />
       <MusicPlayer />
 
-      {/* Temporary download ZIP button - top right */}
-      <a
-        href="/api/download-zip"
-        className="fixed top-4 right-4 z-40 flex items-center gap-2 rounded-full bg-[#111827] text-white pl-3 pr-4 py-2.5 shadow-lg hover:scale-105 transition-transform text-[11px] tracking-[0.15em] uppercase font-medium"
-      >
-        <Download className="w-4 h-4" />
-        <span className="hidden sm:inline">Download ZIP</span>
-      </a>
     </main>
   );
 }

@@ -18,10 +18,14 @@ import {
   Check,
   Loader2,
   Download,
+  ArrowLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+
+/* ⚙️ CONFIG: URL tujuan tombol "Back to Template" */
+const TEMPLATE_URL = "https://template.memoraa-invitation.my.id/";
 
 // ==================== DATA ====================
 const WEDDING_DATA = {
@@ -159,6 +163,20 @@ function AnimatedSection({
     >
       {children}
     </motion.section>
+  );
+}
+
+// ==================== BACK TO TEMPLATE ====================
+function BackToTemplateButton() {
+  return (
+    <a
+      href={TEMPLATE_URL}
+      aria-label="Kembali ke daftar template"
+      className="fixed left-1/2 top-4 z-50 flex h-9 -translate-x-1/2 items-center gap-1.5 rounded-full border border-black/10 bg-white/90 px-4 text-xs font-medium tracking-wide text-black/60 shadow-md backdrop-blur-sm transition-all hover:border-[#8B6F47]/40 hover:bg-white hover:text-[#8B6F47] md:top-5"
+    >
+      <ArrowLeft className="h-3.5 w-3.5" />
+      Back to Template
+    </a>
   );
 }
 
@@ -1308,6 +1326,7 @@ export default function WeddingPage() {
         </motion.div>
       )}
 
+      <BackToTemplateButton />
       <MusicPlayer />
 
       {/* Temporary download ZIP button - top right */}
